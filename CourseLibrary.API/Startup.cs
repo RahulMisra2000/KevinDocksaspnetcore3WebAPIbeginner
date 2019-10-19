@@ -72,12 +72,21 @@ namespace CourseLibrary.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
+            
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage(); /* **** This middleware ensures that If there is an unhandled exception and we 
+                                                         are in development mode then http status code 500 will be returned and 
+                                                         http response body will have the call stack. 
+                                                 */
             }
             else
             {
+                /* **** This middleware ensures that If there is an unhandled exception and we 
+                                                         are in production mode then http status code 500 will be returned and 
+                                                         http response body will just have a message as shown below
+                                                 */
                 app.UseExceptionHandler(appBuilder =>
                 {
                     appBuilder.Run(async context =>
