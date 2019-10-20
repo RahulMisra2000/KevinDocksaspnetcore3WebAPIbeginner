@@ -26,37 +26,39 @@ namespace CourseLibrary.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(setupAction =>
-            {
-                setupAction.ReturnHttpNotAcceptable = true;
-
-            }).AddNewtonsoftJson(setupAction =>
-             {
-                 setupAction.SerializerSettings.ContractResolver =
-                    new CamelCasePropertyNamesContractResolver();
-             })
-             .AddXmlDataContractSerializerFormatters()
-            .ConfigureApiBehaviorOptions(setupAction =>
-            {
-                setupAction.InvalidModelStateResponseFactory = context =>
-                {
-                    var problemDetails = new ValidationProblemDetails(context.ModelState)
+            services
+                .AddControllers(setupAction =>
                     {
-                        Type = "https://courselibrary.com/modelvalidationproblem",
-                        Title = "One or more model validation errors occurred.",
-                        Status = StatusCodes.Status422UnprocessableEntity,
-                        Detail = "See the errors property for details.",
-                        Instance = context.HttpContext.Request.Path
-                    };
+                        setupAction.ReturnHttpNotAcceptable = true;
 
-                    problemDetails.Extensions.Add("traceId", context.HttpContext.TraceIdentifier);
-
-                    return new UnprocessableEntityObjectResult(problemDetails)
+                    })
+                .AddNewtonsoftJson(setupAction =>
+                     {
+                         setupAction.SerializerSettings.ContractResolver =
+                            new CamelCasePropertyNamesContractResolver();
+                     })
+                .AddXmlDataContractSerializerFormatters()
+                .ConfigureApiBehaviorOptions(setupAction =>
                     {
-                        ContentTypes = { "application/problem+json" }
-                    };
-                };
-            });
+                        setupAction.InvalidModelStateResponseFactory = context =>
+                        {
+                                var problemDetails = new ValidationProblemDetails(context.ModelState)
+                                {
+                                    Type = "https://courselibrary.com/modelvalidationproblem",
+                                    Title = "One or more model validation errors occurred.",
+                                    Status = StatusCodes.Status422UnprocessableEntity,
+                                    Detail = "See the errors property for details.",
+                                    Instance = context.HttpContext.Request.Path
+                                };
+
+                                problemDetails.Extensions.Add("traceId", context.HttpContext.TraceIdentifier);
+
+                                return new UnprocessableEntityObjectResult(problemDetails)
+                                {
+                                    ContentTypes = { "application/problem+json" }
+                                };
+                        };
+                     });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
