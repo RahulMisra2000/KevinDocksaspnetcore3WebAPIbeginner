@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace CourseLibrary.API.Models
 {
-    [CourseTitleMustBeDifferentFromDescription(
-          ErrorMessage = "Title must be different from description.")]
+    /* ************************************* Custom Validation attribute being applied at the class level */
+    [CourseTitleMustBeDifferentFromDescription(ErrorMessage = "Title must be different from description.")]
     public abstract class CourseForManipulationDto
     {
         [Required(ErrorMessage = "You should fill out a title.")]
