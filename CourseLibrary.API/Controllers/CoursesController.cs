@@ -154,13 +154,17 @@ namespace CourseLibrary.API.Controllers
             }
 
             var courseToPatch = _mapper.Map<CourseForUpdateDto>(courseForAuthorFromRepo);
-            // add validation
+
+            /* (1) Validate the patch document */
+            /* Any errors inside the patch document (eg referencing a field name that does not exist)) will make the ModelState invalid */
+            /* It will then be picked up by TryValidateModel below */
             patchDocument.ApplyTo(courseToPatch, ModelState);
 
-            /*** ******************************************* manually validating because the action parameter is a patch document
+            /* (2) Validate the contents of the updated DTO */
+            /*** manually validating because the action parameter is a patch document
                  and we can't set any validation attributes etc on it. So, after we apply the patch to the DTO, we can then check 
-                 and see if all is valid before continuing. 
-            */
+                 and see if all the field values are valid before continuing. 
+            */            
             if (!TryValidateModel(courseToPatch))
             {
                 return ValidationProblem(ModelState);
