@@ -157,6 +157,10 @@ namespace CourseLibrary.API.Controllers
             // add validation
             patchDocument.ApplyTo(courseToPatch, ModelState);
 
+            /*** ******************************************* manually validating because the action parameter is a patch document
+                 and we can't set any validation attributes etc on it. So, after we apply the patch to the DTO, we can then check 
+                 and see if all is valid before continuing. 
+            */
             if (!TryValidateModel(courseToPatch))
             {
                 return ValidationProblem(ModelState);
