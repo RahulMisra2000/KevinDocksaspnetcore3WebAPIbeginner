@@ -91,8 +91,10 @@ namespace CourseLibrary.API.Controllers
 
             var courseForAuthorFromRepo = _courseLibraryRepository.GetCourse(authorId, courseId);
 
+
+            /* ************************************   UPSERT Processing ****************************************** */
             if (courseForAuthorFromRepo == null)
-            {
+            {                                                                       
                 var courseToAdd = _mapper.Map<Entities.Course>(course);
                 courseToAdd.Id = courseId;
 
@@ -106,6 +108,8 @@ namespace CourseLibrary.API.Controllers
                     new { authorId, courseId = courseToReturn.Id },
                     courseToReturn);
             }
+            /* ************************************   UPSERT Processing ****************************************** */
+            
 
             // map the entity to a CourseForUpdateDto
             // apply the updated field values to that dto
@@ -130,6 +134,8 @@ namespace CourseLibrary.API.Controllers
 
             var courseForAuthorFromRepo = _courseLibraryRepository.GetCourse(authorId, courseId);
 
+            
+            /* ************************************   UPSERT Processing ****************************************** */
             if (courseForAuthorFromRepo == null)
             {
                 var courseDto = new CourseForUpdateDto();
@@ -152,7 +158,9 @@ namespace CourseLibrary.API.Controllers
                     new { authorId, courseId = courseToReturn.Id }, 
                     courseToReturn);
             }
-
+            /* ************************************   UPSERT Processing ****************************************** */
+            
+            
             var courseToPatch = _mapper.Map<CourseForUpdateDto>(courseForAuthorFromRepo);
 
             /* (1) Validate the patch document */
